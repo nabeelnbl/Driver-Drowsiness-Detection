@@ -1,175 +1,174 @@
-\documentclass[12pt]{article}
+# Driver Drowsiness Detection System
 
-\usepackage{hyperref}
-\usepackage{geometry}
-\geometry{a4paper, margin=1in}
-\usepackage{titlesec}
+### Eye Blink + Yawn Detection using OpenCV, Dlib, and Machine Learning
 
-\titleformat{\section}{\Large\bfseries}{\thesection.}{0.5em}{}
-\titleformat{\subsection}{\bfseries}{\thesubsection}{0.5em}{}
+---
 
-\title{\textbf{Driver Drowsiness Detection Using OpenCV, Dlib \& Machine Learning}}
-\author{Mohammed Nabeel}
-\date{}
+## Overview
 
-\begin{document}
+Driver drowsiness is a major cause of road accidents. This project detects early signs of fatigue by monitoring:
 
-\maketitle
+* Eye closure (blink duration)
+* Mouth opening (yawn detection)
+* Head pose / focus
 
-\section{Project Overview}
+The system uses OpenCV, Dlib's facial landmark detection, and a machine learning model to classify whether a driver is **Alert** or **Drowsy** in real time.
 
-Driver drowsiness is a significant factor in road accidents.  
-This project detects driver fatigue in \textbf{real-time} using:
+---
 
-\begin{itemize}
-    \item OpenCV for video stream processing
-    \item Dlib 68 facial landmarks
-    \item Eye Aspect Ratio (EAR) for blink detection
-    \item Mouth Aspect Ratio (MAR) for yawn detection
-    \item Optional Machine Learning classifier for \textit{Alert} vs \textit{Drowsy}
-\end{itemize}
+## Features
 
-The system triggers an alarm when drowsiness is detected.
+* Real-time webcam monitoring
+* Eye Aspect Ratio (EAR) calculation
+* Mouth Aspect Ratio (MAR) calculation
+* ML model to classify drowsiness
+* Alarm system when drowsiness is detected
+* Accurate facial landmark detection
 
-\section{Features}
+---
 
-\begin{itemize}
-    \item Real-time face detection
-    \item Eye blink detection
-    \item Prolonged eye closure detection
-    \item Yawn detection
-    \item Facial landmark extraction
-    \item Alarm sound on drowsiness
-    \item Extendable ML model for better classification
-\end{itemize}
+## Tech Stack
 
-\section{Folder Structure}
+* Python
+* OpenCV
+* Dlib
+* Scikit-learn
+* NumPy
 
-\begin{verbatim}
-Driver_Drowsiness_Detection/
-│
-├── src/
-│   ├── face_landmark_test.py
-│   ├── realtime_drowsiness.py
-│   ├── features.py
-│   └── train_model.py
-│
-├── data/
-│   ├── train/
-│   └── test/
-│
-├── models/
-│   └── drowsiness_model.pkl
-│
-├── resources/
-│   └── shape_predictor_68_face_landmarks.dat
-│
-├── alarm.wav
-└── README.tex
-\end{verbatim}
+---
 
-\section{Technologies Used}
+## Dataset
 
-\begin{itemize}
-    \item Python 3.8+
-    \item OpenCV
-    \item Dlib
-    \item Imutils
-    \item NumPy \& SciPy
-    \item scikit-learn
-    \item Playsound
-\end{itemize}
+You can use public datasets such as:
 
-\section{Installation \& Setup}
+* Closed Eyes Dataset
+* YawDD (Yawning Detection Dataset)
 
-\subsection{Clone the Repository}
-\begin{verbatim}
-git clone https://github.com/your-username/Driver_Drowsiness_Detection.git
-cd Driver_Drowsiness_Detection
-\end{verbatim}
+Dataset labels:
 
-\subsection{Install Dependencies}
-\begin{verbatim}
-pip install -r requirements.txt
-\end{verbatim}
+* Open Eyes
+* Closed Eyes
+* Yawn
+* No Yawn
 
-Or manually install OpenCV, dlib, numpy, scipy, imutils, scikit-learn, playsound.
+---
 
-\subsection{Download Facial Landmark Model}
+## Workflow
 
-Download the landmark predictor from:
+### 1. Capture Video
 
-\url{http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2}
+Frames are captured live from the webcam using OpenCV.
 
-Extract and place the file into:
+### 2. Detect Face and Landmarks
 
-\begin{verbatim}
-resources/shape_predictor_68_face_landmarks.dat
-\end{verbatim}
+Dlib 68-face landmark model detects the eyes and mouth region.
 
-\section{Test Facial Landmark Detection}
+### 3. Compute EAR (Eye Aspect Ratio)
 
-Run the following:
+Formula used:
 
-\begin{verbatim}
-python src/face_landmark_test.py
-\end{verbatim}
+```
+EAR = (distance(p2, p6) + distance(p3, p5)) / (2 * distance(p1, p4))
+```
 
-You should see green landmark points on your face.
+### 4. Compute MAR (Mouth Aspect Ratio)
 
-\section{Run Real-Time Drowsiness Detection}
+```
+MAR = (distance(p50, p58) + distance(p52, p56) + distance(p51, p57)) / (2 * distance(p48, p54))
+```
 
-Start the main script:
+### 5. Extract Features
 
-\begin{verbatim}
-python src/realtime_drowsiness.py
-\end{verbatim}
+* EAR values
+* MAR values
+* Blink count
+* Yawn frequency
 
-\subsection*{System Detects:}
+### 6. Train ML Model
 
-\begin{itemize}
-    \item EAR threshold → eye closure
-    \item MAR threshold → yawn detection
-    \item Consecutive frames → drowsiness alert
-\end{itemize}
+You can use models like:
 
-An alarm will play when drowsiness is detected.
+* SVM
+* Logistic Regression
+* Random Forest
 
-\section{Optional: Train Machine Learning Model}
+Target labels:
 
-Extract EAR, MAR, and blink features and run:
+* 0 = Alert
+* 1 = Drowsy
 
-\begin{verbatim}
-python src/train_model.py
-\end{verbatim}
+### 7. Real-Time Prediction
 
-This generates:
+The trained model predicts the state every frame.
+If the driver is detected as *Drowsy*, an alarm plays.
 
-\begin{verbatim}
-models/drowsiness_model.pkl
-\end{verbatim}
+---
 
-\section{Future Enhancements}
+## Installation
 
-\begin{itemize}
-    \item CNN-based eye state classification
-    \item LSTM-based temporal analysis
-    \item Dashboard UI
-    \item Raspberry Pi deployment
-    \item YOLO-based face detection
-\end{itemize}
+### Clone Repository
 
-\section{Contribution}
+```
+git clone https://github.com/your-username/drowsiness-detection.git
+cd drowsiness-detection
+```
 
-Contributions, ideas, and pull requests are welcome.
+### Install Dependencies
 
-\section{License}
+```
+pip install opencv-python dlib imutils numpy scikit-learn playsound
+```
 
-This project is licensed under the MIT License.
+---
 
-\section{Author}
+## How to Run
 
-\textbf{Mohammed Nabeel}  
-AI \& ML Enthusiast
+Run the real-time detection:
 
-\end{document}
+```
+python main.py
+```
+
+Run the model training:
+
+```
+python train_model.py
+```
+
+---
+
+## Folder Structure
+
+```
+drowsiness-detection/
+│── main.py
+│── train_model.py
+│── utils.py
+│── model.pkl
+│── alarm.wav
+│── README.md
+│── dataset/
+│    ├── open_eyes/
+│    ├── closed_eyes/
+│    ├── yawn/
+│    └── no_yawn/
+```
+
+---
+
+## Results
+
+* Detects eye closure accurately
+* Detects yawning
+* Works in real time
+* Machine learning enhances accuracy
+
+---
+
+## Future Improvements
+
+* Use Deep Learning CNN instead of Dlib
+* Convert model to TensorFlow Lite and deploy on mobile
+* Raspberry Pi integration
+
+

@@ -1,174 +1,133 @@
-# Driver Drowsiness Detection System
-
-### Eye Blink + Yawn Detection using OpenCV, Dlib, and Machine Learning
+Here is a **clean, professional README** you can directly copy-paste into your GitHub.
+(Simple English, no LaTeX, no curly braces, no sections.)
 
 ---
 
-## Overview
+# Driver Drowsiness Detection System
 
-Driver drowsiness is a major cause of road accidents. This project detects early signs of fatigue by monitoring:
-
-* Eye closure (blink duration)
-* Mouth opening (yawn detection)
-* Head pose / focus
-
-The system uses OpenCV, Dlib's facial landmark detection, and a machine learning model to classify whether a driver is **Alert** or **Drowsy** in real time.
+This project detects driver drowsiness in real time using eye-blink detection and yawn detection.
+The system uses OpenCV, dlib, and facial landmark analysis to monitor eye aspect ratio (EAR) and mouth aspect ratio (MAR).
+If the driver is sleepy or yawning, an alarm sound is triggered automatically.
 
 ---
 
 ## Features
 
 * Real-time webcam monitoring
-* Eye Aspect Ratio (EAR) calculation
-* Mouth Aspect Ratio (MAR) calculation
-* ML model to classify drowsiness
-* Alarm system when drowsiness is detected
-* Accurate facial landmark detection
+* Eye Aspect Ratio (EAR) for blink and eye-closure detection
+* Mouth Aspect Ratio (MAR) for yawn detection
+* Automatic alarm alert using an audio file
+* Facial landmark visualization on eyes and mouth
 
 ---
 
-## Tech Stack
+## Technologies Used
 
 * Python
 * OpenCV
-* Dlib
-* Scikit-learn
-* NumPy
+* dlib
+* numpy
+* scipy
+* threading
+* playsound
 
 ---
 
-## Dataset
+## Setup Instructions
 
-You can use public datasets such as:
-
-* Closed Eyes Dataset
-* YawDD (Yawning Detection Dataset)
-
-Dataset labels:
-
-* Open Eyes
-* Closed Eyes
-* Yawn
-* No Yawn
-
----
-
-## Workflow
-
-### 1. Capture Video
-
-Frames are captured live from the webcam using OpenCV.
-
-### 2. Detect Face and Landmarks
-
-Dlib 68-face landmark model detects the eyes and mouth region.
-
-### 3. Compute EAR (Eye Aspect Ratio)
-
-Formula used:
+### 1. Clone this repository
 
 ```
-EAR = (distance(p2, p6) + distance(p3, p5)) / (2 * distance(p1, p4))
+git clone https://github.com/your-username/your-repository.git
+cd your-repository
 ```
 
-### 4. Compute MAR (Mouth Aspect Ratio)
+### 2. Create and activate environment
 
 ```
-MAR = (distance(p50, p58) + distance(p52, p56) + distance(p51, p57)) / (2 * distance(p48, p54))
+python -m venv venv
 ```
 
-### 5. Extract Features
-
-* EAR values
-* MAR values
-* Blink count
-* Yawn frequency
-
-### 6. Train ML Model
-
-You can use models like:
-
-* SVM
-* Logistic Regression
-* Random Forest
-
-Target labels:
-
-* 0 = Alert
-* 1 = Drowsy
-
-### 7. Real-Time Prediction
-
-The trained model predicts the state every frame.
-If the driver is detected as *Drowsy*, an alarm plays.
-
----
-
-## Installation
-
-### Clone Repository
+Windows:
 
 ```
-git clone https://github.com/your-username/drowsiness-detection.git
-cd drowsiness-detection
+venv\Scripts\activate
 ```
 
-### Install Dependencies
+macOS / Linux:
 
 ```
-pip install opencv-python dlib imutils numpy scikit-learn playsound
+source venv/bin/activate
+```
+
+### 3. Install dependencies
+
+```
+pip install opencv-python dlib numpy scipy playsound
+```
+
+### 4. Download the face landmarks model
+
+Download the file:
+
+shape_predictor_68_face_landmarks.dat
+
+Link (official dlib model):
+[https://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2](https://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2)
+
+Extract it and place the .dat file inside your project folder.
+
+### 5. Add alarm sound file
+
+Place your audio file in the same folder and name it:
+
+```
+alaram_3.wav
 ```
 
 ---
 
-## How to Run
+## Run the Project
 
-Run the real-time detection:
+Execute the Python script:
 
 ```
 python main.py
 ```
 
-Run the model training:
+Your webcam will start automatically.
 
-```
-python train_model.py
-```
+Press ESC to exit.
 
 ---
 
-## Folder Structure
+## How It Works
 
-```
-drowsiness-detection/
-│── main.py
-│── train_model.py
-│── utils.py
-│── model.pkl
-│── alarm.wav
-│── README.md
-│── dataset/
-│    ├── open_eyes/
-│    ├── closed_eyes/
-│    ├── yawn/
-│    └── no_yawn/
-```
+### Eye Aspect Ratio (EAR)
 
----
+* EAR decreases when eyes begin to close
+* If EAR stays below threshold for several frames → drowsiness alert
 
-## Results
+### Mouth Aspect Ratio (MAR)
 
-* Detects eye closure accurately
-* Detects yawning
-* Works in real time
-* Machine learning enhances accuracy
+* MAR increases during a yawn
+* If MAR crosses the threshold → yawn detected
+
+### Alarm
+
+* A background thread plays the alarm sound whenever drowsiness is detected
 
 ---
 
-## Future Improvements
+## Output Preview
 
-* Use Deep Learning CNN instead of Dlib
-* Convert model to TensorFlow Lite and deploy on mobile
-* Raspberry Pi integration
+* Real-time window showing face landmarks
+* Alerts for
 
+  * DROWSINESS
+  * YAWNING
+* EAR and MAR values displayed on the screen
 
+---
+
+If you want, I can also make a **GitHub-ready project structure**, **badges**, or **demo GIF instructions**.
